@@ -3,6 +3,7 @@ package com.keanequibilan.githubexplorer.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.keanequibilan.githubexplorer.model.Repo
 import com.keanequibilan.githubexplorer.model.User
 import com.keanequibilan.githubexplorer.network.RetrofitClient
 import kotlinx.coroutines.CoroutineScope
@@ -17,32 +18,48 @@ class GitHubViewModel(
     private val retrofitClient: RetrofitClient,
     private val backgroundContext: CoroutineContext
 ) : ViewModel() {
-    private val user: MutableLiveData<User> = MutableLiveData()
-    private val error: MutableLiveData<Int> = MutableLiveData()
+    private var isError = false
+
+    private val userLiveData: MutableLiveData<User> = MutableLiveData()
+    private val errorLiveData: MutableLiveData<Int> = MutableLiveData()
+    private val reposLiveData: MutableLiveData<List<Repo>> = MutableLiveData()
 
     /**
      * Returns a [LiveData] that notifies observers of updated [User]s.
      */
-    fun getUserLiveData(): LiveData<User> = user
+    fun getUserLiveData(): LiveData<User> = userLiveData
 
     /**
-     * Returns a [LiveData] that notifies observers of updated Status Codes when there is an error.
+     * Returns a [LiveData] that notifies observers of updated Status Codes when there is an errorLiveData.
      */
-    fun getErrorLiveData(): LiveData<Int> = error
+    fun getErrorLiveData(): LiveData<Int> = errorLiveData
 
     /**
-     * Does a network call to retrieve the user associated with the [name] passed in. To receive the result of the call
-     * subscribe to the [LiveData] retrieved by [getUserLiveData].
+     * Returns a [LiveData] that notifies observers of updated [Repo] lists.
+     */
+    fun getReposLiveData(): LiveData<List<Repo>> = reposLiveData
+
+    /**
+     * Does a network call to retrieve the userLiveData associated with the [name] passed in. To receive the result of
+     * the calls subscribe to the [LiveData] retrieved by [getUserLiveData], [getReposLiveData], and [getErrorLiveData].
      */
     fun loadUser(name: String) = CoroutineScope(backgroundContext).launch {
-        retrofitClient
-            .getUser(name)
-            .let {
-                if (it.isSuccessful) {
-                    user.postValue(it.body())
-                } else {
-                    error.postValue(it.code())
-                }
+        isError = false
+        retrofitClient.apply {
+            val userDeferred = getUserAsync(name)
+            val reposDeferred = getReposAsync(name)
+
+            val user = userDeferred.await()
+            val repos = reposDeferred.await()
+
+            if (!user.isSuccessful) {
+                errorLiveData.postValue(user.code())
+            } else if (!repos.isSuccessful) {
+                errorLiveData.postValue(repos.code())
+            } else {
+                userLiveData.postValue(user.body())
+                reposLiveData.postValue(repos.body())
             }
+        }
     }
 }
