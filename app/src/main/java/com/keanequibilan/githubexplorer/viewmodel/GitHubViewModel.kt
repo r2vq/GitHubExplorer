@@ -40,7 +40,7 @@ class GitHubViewModel(
 
     fun getSelectedRepoLiveData(): LiveData<Repo> = selectedRepoLiveData
 
-    fun setSelectedRepo(repo: Repo) {
+    fun setSelectedRepo(repo: Repo?) {
         selectedRepoLiveData.value = repo
     }
 

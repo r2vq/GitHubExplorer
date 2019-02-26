@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.keanequibilan.githubexplorer.R
 import com.keanequibilan.githubexplorer.adapter.RepoListAdapter
 import com.keanequibilan.githubexplorer.fragment.RepoDetailsBottomSheetDialogFragment
@@ -20,6 +21,8 @@ class MainActivity : AppCompatActivity() {
     private val gitHubViewModel: GitHubViewModel by viewModel()
 
     private val repoListAdapter: RepoListAdapter by inject { parametersOf(gitHubViewModel) }
+
+    private var repoDetailsBottomSheetDialogFragment: BottomSheetDialogFragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,15 +42,12 @@ class MainActivity : AppCompatActivity() {
 
         gitHubViewModel
             .getSelectedRepoLiveData()
-            .observe(this, Observer { onRepoSelected(it) })
+            .observe(this, Observer { showRepoDetails(it) })
 
         rv_repos.adapter = repoListAdapter
 
         btn_search.setOnClickListener { gitHubViewModel.loadUser(et_search.text.toString()) }
     }
-
-    private fun onRepoSelected(repo: Repo) = RepoDetailsBottomSheetDialogFragment
-        .showDialog(supportFragmentManager, repo)
 
     private fun setError(code: Int) {
         iv_avatar.setImageResource(android.R.color.transparent)
@@ -63,5 +63,11 @@ class MainActivity : AppCompatActivity() {
             // TODO - Animate items in order
             .into(iv_avatar)
         tv_user_name.text = user.name
+    }
+
+    private fun showRepoDetails(repo: Repo?) = repo?.let {
+        gitHubViewModel.setSelectedRepo(null)
+        repoDetailsBottomSheetDialogFragment = RepoDetailsBottomSheetDialogFragment
+            .showDialog(supportFragmentManager, it)
     }
 }

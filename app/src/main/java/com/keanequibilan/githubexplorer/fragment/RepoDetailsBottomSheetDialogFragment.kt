@@ -41,8 +41,9 @@ class RepoDetailsBottomSheetDialogFragment : BottomSheetDialogFragment() {
          *
          * @param supportFragmentManager FragmentManager used to show the fragment.
          * @param repo Repo used to get data for the fragment.
+         * @return The instance of [RepoDetailsBottomSheetDialogFragment]
          */
-        fun showDialog(supportFragmentManager: FragmentManager, repo: Repo) {
+        fun showDialog(supportFragmentManager: FragmentManager, repo: Repo) =
             RepoDetailsBottomSheetDialogFragment().apply {
                 arguments = Bundle().apply {
                     putString(BUNDLE_KEY_UPDATED, repo.updatedAt)
@@ -51,6 +52,5 @@ class RepoDetailsBottomSheetDialogFragment : BottomSheetDialogFragment() {
                 }
                 show(supportFragmentManager, RepoDetailsBottomSheetDialogFragment::class.java.simpleName)
             }
-        }
     }
 }
