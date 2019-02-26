@@ -1,5 +1,6 @@
 package com.keanequibilan.githubexplorer.fragment
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.keanequibilan.githubexplorer.R
 import com.keanequibilan.githubexplorer.model.Repo
 import kotlinx.android.synthetic.main.fragment_repo_bottom_sheet_dialog.*
+import java.text.SimpleDateFormat
 
 private const val BUNDLE_KEY_UPDATED = "updated"
 private const val BUNDLE_KEY_STARGAZERS = "stargazers"
@@ -46,11 +48,20 @@ class RepoDetailsBottomSheetDialogFragment : BottomSheetDialogFragment() {
         fun showDialog(supportFragmentManager: FragmentManager, repo: Repo) =
             RepoDetailsBottomSheetDialogFragment().apply {
                 arguments = Bundle().apply {
-                    putString(BUNDLE_KEY_UPDATED, repo.updatedAt)
+                    putString(BUNDLE_KEY_UPDATED, repo.updatedAt.formatDate())
                     putString(BUNDLE_KEY_STARGAZERS, repo.stargazersCount.toString())
                     putString(BUNDLE_KEY_FORKS, repo.forks.toString())
                 }
                 show(supportFragmentManager, RepoDetailsBottomSheetDialogFragment::class.java.simpleName)
             }
+
+        @SuppressLint("SimpleDateFormat")
+        private val DATE_FORMAT_GITHUB = SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss'Z'")
+        @SuppressLint("SimpleDateFormat")
+        private val DATE_FORMAT_OUTPUT = SimpleDateFormat("MMM dd, yyyy h:mm:ss a")
+
+        private fun String.formatDate(): String = this
+            .let { DATE_FORMAT_GITHUB.parse(it) }
+            .let { DATE_FORMAT_OUTPUT.format(it) }
     }
 }
