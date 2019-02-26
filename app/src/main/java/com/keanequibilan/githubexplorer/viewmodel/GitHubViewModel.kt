@@ -18,8 +18,6 @@ class GitHubViewModel(
     private val retrofitClient: RetrofitClient,
     private val backgroundContext: CoroutineContext
 ) : ViewModel() {
-    private var isError = false
-
     private val userLiveData: MutableLiveData<User> = MutableLiveData()
     private val errorLiveData: MutableLiveData<Int> = MutableLiveData()
     private val reposLiveData: MutableLiveData<List<Repo>> = MutableLiveData()
@@ -51,7 +49,6 @@ class GitHubViewModel(
      * the calls subscribe to the [LiveData] retrieved by [getUserLiveData], [getReposLiveData], and [getErrorLiveData].
      */
     fun loadUser(name: String) = CoroutineScope(backgroundContext).launch {
-        isError = false
         retrofitClient.apply {
             val userDeferred = getUserAsync(name)
             val reposDeferred = getReposAsync(name)
