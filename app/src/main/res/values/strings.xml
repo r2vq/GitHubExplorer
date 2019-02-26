@@ -4,4 +4,7 @@
     <string name="et_search_hint">Enter a github user id</string>
     <string name="profile_image_content_description">User Profile Images</string>
     <string name="error_message">Error loading user. Code: %1$d</string>
+    <string name="header_last_updated">Last Updated</string>
+    <string name="header_stars">Stars</string>
+    <string name="header_forks">Forks</string>
 </resources>

@@ -18,11 +18,10 @@ class GitHubViewModel(
     private val retrofitClient: RetrofitClient,
     private val backgroundContext: CoroutineContext
 ) : ViewModel() {
-    private var isError = false
-
     private val userLiveData: MutableLiveData<User> = MutableLiveData()
     private val errorLiveData: MutableLiveData<Int> = MutableLiveData()
     private val reposLiveData: MutableLiveData<List<Repo>> = MutableLiveData()
+    private val selectedRepoLiveData: MutableLiveData<Repo> = MutableLiveData()
 
     /**
      * Returns a [LiveData] that notifies observers of updated [User]s.
@@ -40,11 +39,22 @@ class GitHubViewModel(
     fun getReposLiveData(): LiveData<List<Repo>> = reposLiveData
 
     /**
+     * Returns a [LiveData] that notifies observers of when a [Repo] is selected.
+     */
+    fun getSelectedRepoLiveData(): LiveData<Repo> = selectedRepoLiveData
+
+    /**
+     * Select a [Repo] so that any observers subscribed to [getSelectedRepoLiveData] will be notified.
+     */
+    fun setSelectedRepo(repo: Repo?) {
+        selectedRepoLiveData.value = repo
+    }
+
+    /**
      * Does a network call to retrieve the userLiveData associated with the [name] passed in. To receive the result of
      * the calls subscribe to the [LiveData] retrieved by [getUserLiveData], [getReposLiveData], and [getErrorLiveData].
      */
     fun loadUser(name: String) = CoroutineScope(backgroundContext).launch {
-        isError = false
         retrofitClient.apply {
             val userDeferred = getUserAsync(name)
             val reposDeferred = getReposAsync(name)
