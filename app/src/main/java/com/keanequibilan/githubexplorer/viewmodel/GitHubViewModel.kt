@@ -23,6 +23,7 @@ class GitHubViewModel(
     private val userLiveData: MutableLiveData<User> = MutableLiveData()
     private val errorLiveData: MutableLiveData<Int> = MutableLiveData()
     private val reposLiveData: MutableLiveData<List<Repo>> = MutableLiveData()
+    private val selectedRepoLiveData: MutableLiveData<Repo> = MutableLiveData()
 
     /**
      * Returns a [LiveData] that notifies observers of updated [User]s.
@@ -38,6 +39,12 @@ class GitHubViewModel(
      * Returns a [LiveData] that notifies observers of updated [Repo] lists.
      */
     fun getReposLiveData(): LiveData<List<Repo>> = reposLiveData
+
+    fun getSelectedRepoLiveData(): LiveData<Repo> = selectedRepoLiveData
+
+    fun setSelectedRepo(repo: Repo) {
+        selectedRepoLiveData.value = repo
+    }
 
     /**
      * Does a network call to retrieve the userLiveData associated with the [name] passed in. To receive the result of

@@ -47,9 +47,9 @@ val APP_MODULE = module {
     viewModel { GitHubViewModel(get(), get("backgroundContext")) }
 
     /**
-     * Provides a [RepoListAdapter].
+     * Provides a [RepoListAdapter]. Depends on an instance of [RepoDiffUtilItemCallback] and [GitHubViewModel].
      */
-    single { RepoListAdapter(get("repoDiffUtilItemCallback")) }
+    factory { (viewModel: GitHubViewModel) -> RepoListAdapter(get("repoDiffUtilItemCallback"), viewModel) }
 
     /**
      * Provides a [RepoDiffUtilItemCallback] to satisfy required [DiffUtil.ItemCallback].

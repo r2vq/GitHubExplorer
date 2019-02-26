@@ -6,18 +6,20 @@ import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
 import com.keanequibilan.githubexplorer.R
 import com.keanequibilan.githubexplorer.adapter.RepoListAdapter
+import com.keanequibilan.githubexplorer.fragment.RepoDetailsBottomSheetDialogFragment
 import com.keanequibilan.githubexplorer.model.Repo
 import com.keanequibilan.githubexplorer.model.User
 import com.keanequibilan.githubexplorer.viewmodel.GitHubViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
 class MainActivity : AppCompatActivity() {
 
     private val gitHubViewModel: GitHubViewModel by viewModel()
 
-    private val repoListAdapter: RepoListAdapter by inject()
+    private val repoListAdapter: RepoListAdapter by inject { parametersOf(gitHubViewModel) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,13 +37,17 @@ class MainActivity : AppCompatActivity() {
             .getReposLiveData()
             .observe(this, Observer { setRepos(it) })
 
+        gitHubViewModel
+            .getSelectedRepoLiveData()
+            .observe(this, Observer { onRepoSelected(it) })
+
         rv_repos.adapter = repoListAdapter
 
-        btn_search
-            .setOnClickListener {
-                gitHubViewModel.loadUser(et_search.text.toString())
-            }
+        btn_search.setOnClickListener { gitHubViewModel.loadUser(et_search.text.toString()) }
     }
+
+    private fun onRepoSelected(repo: Repo) = RepoDetailsBottomSheetDialogFragment
+        .showDialog(supportFragmentManager, repo)
 
     private fun setError(code: Int) {
         iv_avatar.setImageResource(android.R.color.transparent)
