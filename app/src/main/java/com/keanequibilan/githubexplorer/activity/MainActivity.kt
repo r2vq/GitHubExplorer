@@ -1,9 +1,9 @@
 package com.keanequibilan.githubexplorer.activity
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
+import com.bumptech.glide.Glide
 import com.keanequibilan.githubexplorer.R
 import com.keanequibilan.githubexplorer.model.User
 import com.keanequibilan.githubexplorer.viewmodel.GitHubViewModel
@@ -29,6 +29,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setUser(user: User) {
-        Toast.makeText(this, "User found: ${user.name}", Toast.LENGTH_SHORT).show()
+        Glide
+            .with(this)
+            .load(user.avatarUrl)
+            // TODO - Animate items in order
+            .into(iv_avatar)
+        tv_user_name.text = user.name
     }
 }
