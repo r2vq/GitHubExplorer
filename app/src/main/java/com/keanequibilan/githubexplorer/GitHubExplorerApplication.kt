@@ -1,11 +1,10 @@
 package com.keanequibilan.githubexplorer
 
-import android.annotation.SuppressLint
 import android.app.Application
 import com.keanequibilan.githubexplorer.di.APP_MODULE
 import org.koin.android.ext.android.startKoin
 
-@SuppressLint("Registered")
+@Suppress("unused")
 class GitHubExplorerApplication : Application() {
     override fun onCreate() {
         super.onCreate()
