@@ -4,6 +4,7 @@ import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterF
 import com.keanequibilan.githubexplorer.GITHUB_API_BASE_URL
 import com.keanequibilan.githubexplorer.model.User
 import okhttp3.OkHttpClient
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -26,7 +27,7 @@ class RetrofitClient(
      *
      * @param name String the login ID of the user.
      */
-    suspend fun getUser(name: String): User = client
+    suspend fun getUser(name: String): Response<User> = client
         .getUsersAsync(name)
         .await()
 }
