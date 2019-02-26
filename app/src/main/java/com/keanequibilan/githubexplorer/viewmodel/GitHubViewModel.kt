@@ -38,8 +38,14 @@ class GitHubViewModel(
      */
     fun getReposLiveData(): LiveData<List<Repo>> = reposLiveData
 
+    /**
+     * Returns a [LiveData] that notifies observers of when a [Repo] is selected.
+     */
     fun getSelectedRepoLiveData(): LiveData<Repo> = selectedRepoLiveData
 
+    /**
+     * Select a [Repo] so that any observers subscribed to [getSelectedRepoLiveData] will be notified.
+     */
     fun setSelectedRepo(repo: Repo?) {
         selectedRepoLiveData.value = repo
     }
