@@ -2,7 +2,9 @@ package com.keanequibilan.githubexplorer.network
 
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.keanequibilan.githubexplorer.GITHUB_API_BASE_URL
+import com.keanequibilan.githubexplorer.model.Repo
 import com.keanequibilan.githubexplorer.model.User
+import kotlinx.coroutines.Deferred
 import okhttp3.OkHttpClient
 import retrofit2.Response
 import retrofit2.Retrofit
@@ -27,7 +29,14 @@ class RetrofitClient(
      *
      * @param name String the login ID of the user.
      */
-    suspend fun getUser(name: String): Response<User> = client
+    fun getUserAsync(name: String): Deferred<Response<User>> = client
         .getUsersAsync(name)
-        .await()
+
+    /**
+     * Retrieves the repos returned by the GitHub API for the specified User.
+     *
+     * @param name String the login ID of the user.
+     */
+    fun getReposAsync(name: String): Deferred<Response<List<Repo>>> = client
+        .getReposAsync(name)
 }

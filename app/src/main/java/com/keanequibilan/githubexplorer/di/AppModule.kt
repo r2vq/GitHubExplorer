@@ -1,7 +1,11 @@
 package com.keanequibilan.githubexplorer.di
 
+import androidx.recyclerview.widget.DiffUtil
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
+import com.keanequibilan.githubexplorer.adapter.RepoListAdapter
+import com.keanequibilan.githubexplorer.model.Repo
 import com.keanequibilan.githubexplorer.network.RetrofitClient
+import com.keanequibilan.githubexplorer.util.RepoDiffUtilItemCallback
 import com.keanequibilan.githubexplorer.viewmodel.GitHubViewModel
 import kotlinx.coroutines.Dispatchers
 import okhttp3.OkHttpClient
@@ -41,5 +45,15 @@ val APP_MODULE = module {
      * Provides the [GitHubViewModel]. Depends on [RetrofitClient] and a background [CoroutineContext].
      */
     viewModel { GitHubViewModel(get(), get("backgroundContext")) }
+
+    /**
+     * Provides a [RepoListAdapter].
+     */
+    single { RepoListAdapter(get("repoDiffUtilItemCallback")) }
+
+    /**
+     * Provides a [RepoDiffUtilItemCallback] to satisfy required [DiffUtil.ItemCallback].
+     */
+    single<DiffUtil.ItemCallback<Repo>>("repoDiffUtilItemCallback") { RepoDiffUtilItemCallback() }
 
 }

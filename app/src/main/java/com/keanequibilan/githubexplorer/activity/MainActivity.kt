@@ -5,14 +5,19 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
 import com.keanequibilan.githubexplorer.R
+import com.keanequibilan.githubexplorer.adapter.RepoListAdapter
+import com.keanequibilan.githubexplorer.model.Repo
 import com.keanequibilan.githubexplorer.model.User
 import com.keanequibilan.githubexplorer.viewmodel.GitHubViewModel
 import kotlinx.android.synthetic.main.activity_main.*
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
 
     private val gitHubViewModel: GitHubViewModel by viewModel()
+
+    private val repoListAdapter: RepoListAdapter by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,6 +31,12 @@ class MainActivity : AppCompatActivity() {
             .getErrorLiveData()
             .observe(this, Observer { setError(it) })
 
+        gitHubViewModel
+            .getReposLiveData()
+            .observe(this, Observer { setRepos(it) })
+
+        rv_repos.adapter = repoListAdapter
+
         btn_search
             .setOnClickListener {
                 gitHubViewModel.loadUser(et_search.text.toString())
@@ -36,6 +47,8 @@ class MainActivity : AppCompatActivity() {
         iv_avatar.setImageResource(android.R.color.transparent)
         tv_user_name.text = getString(R.string.error_message, code)
     }
+
+    private fun setRepos(repos: List<Repo>) = repoListAdapter.submitList(repos)
 
     private fun setUser(user: User) {
         Glide
