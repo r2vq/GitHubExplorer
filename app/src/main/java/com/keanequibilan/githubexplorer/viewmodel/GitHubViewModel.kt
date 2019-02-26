@@ -16,12 +16,12 @@ import kotlin.coroutines.CoroutineContext
  */
 class GitHubViewModel(
     private val retrofitClient: RetrofitClient,
-    private val backgroundContext: CoroutineContext
+    private val backgroundContext: CoroutineContext,
+    private val userLiveData: MutableLiveData<User>,
+    private val errorLiveData: MutableLiveData<Int>,
+    private val reposLiveData: MutableLiveData<List<Repo>>,
+    private val selectedRepoLiveData: MutableLiveData<Repo>
 ) : ViewModel() {
-    private val userLiveData: MutableLiveData<User> = MutableLiveData()
-    private val errorLiveData: MutableLiveData<Int> = MutableLiveData()
-    private val reposLiveData: MutableLiveData<List<Repo>> = MutableLiveData()
-    private val selectedRepoLiveData: MutableLiveData<Repo> = MutableLiveData()
 
     /**
      * Returns a [LiveData] that notifies observers of updated [User]s.

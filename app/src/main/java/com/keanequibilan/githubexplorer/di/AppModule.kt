@@ -1,9 +1,11 @@
 package com.keanequibilan.githubexplorer.di
 
+import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.DiffUtil
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.keanequibilan.githubexplorer.adapter.RepoListAdapter
 import com.keanequibilan.githubexplorer.model.Repo
+import com.keanequibilan.githubexplorer.model.User
 import com.keanequibilan.githubexplorer.network.RetrofitClient
 import com.keanequibilan.githubexplorer.util.RepoDiffUtilItemCallback
 import com.keanequibilan.githubexplorer.viewmodel.GitHubViewModel
@@ -41,10 +43,27 @@ val APP_MODULE = module {
      */
     single<CoroutineContext>("backgroundContext") { Dispatchers.IO }
 
+    factory("userLiveData") { MutableLiveData<User>() }
+
+    factory("errorLiveData") { MutableLiveData<Int>() }
+
+    factory("reposLiveData") { MutableLiveData<List<Repo>>() }
+
+    factory("selectedRepoLiveData") { MutableLiveData<Repo>() }
+
     /**
      * Provides the [GitHubViewModel]. Depends on [RetrofitClient] and a background [CoroutineContext].
      */
-    viewModel { GitHubViewModel(get(), get("backgroundContext")) }
+    viewModel {
+        GitHubViewModel(
+            get(),
+            get("backgroundContext"),
+            get("userLiveData"),
+            get("errorLiveData"),
+            get("reposLiveData"),
+            get("selectedRepoLiveData")
+        )
+    }
 
     /**
      * Provides a [RepoListAdapter]. Depends on an instance of [RepoDiffUtilItemCallback] and [GitHubViewModel].
