@@ -19,13 +19,22 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         gitHubViewModel
-            .getUser()
+            .getUserLiveData()
             .observe(this, Observer { setUser(it) })
+
+        gitHubViewModel
+            .getErrorLiveData()
+            .observe(this, Observer { setError(it) })
 
         btn_search
             .setOnClickListener {
                 gitHubViewModel.loadUser(et_search.text.toString())
             }
+    }
+
+    private fun setError(code: Int) {
+        iv_avatar.setImageResource(android.R.color.transparent)
+        tv_user_name.text = getString(R.string.error_message, code)
     }
 
     private fun setUser(user: User) {
