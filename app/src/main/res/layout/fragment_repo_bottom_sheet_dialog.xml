@@ -5,7 +5,10 @@
     android:id="@+id/bs_repos"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/padding_default">
+    android:paddingStart="@dimen/padding_large"
+    android:paddingTop="@dimen/padding_extra_large"
+    android:paddingEnd="@dimen/padding_large"
+    android:paddingBottom="@dimen/padding_extra_large">
 
     <TextView
         android:id="@+id/tv_header_updated"
@@ -28,6 +31,7 @@
         android:id="@+id/tv_header_stars"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/padding_large"
         android:text="@string/header_stars"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
@@ -37,6 +41,7 @@
         android:id="@+id/tv_value_stars"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/padding_large"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_value_updated"
         tools:text="8" />
@@ -45,6 +50,7 @@
         android:id="@+id/tv_header_forks"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/padding_large"
         android:text="@string/header_forks"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
@@ -54,6 +60,7 @@
         android:id="@+id/tv_value_forks"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/padding_large"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_value_stars"
         tools:text="24" />
